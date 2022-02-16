@@ -37,8 +37,8 @@ spec:
       image: quay.io/openshift-pipeline/s2i
       workingdir: /env-params
       command:
-        - "/bin/sh"
-        - "-c"
+        - '/bin/sh'
+        - '-c'
       args:
         - |-
           echo "MAVEN_CLEAR_REPO=$(inputs.params.MAVEN_CLEAR_REPO)" > env-file
@@ -57,8 +57,8 @@ spec:
       image: maven:3.6.3-ibmjava-8
       workingdir: /workspace/source
       command:
-        - "/bin/sh"
-        - "-c"
+        - '/bin/sh'
+        - '-c'
       args:
         - |-
           mvn --version 
@@ -78,16 +78,16 @@ spec:
       image: quay.io/openshift-pipeline/s2i
       workingdir: /workspace/source
       command:
-        - "s2i"
-        - "build"
-        - "$(inputs.params.PATH_CONTEXT)"
-        - "ibmcom/websphere-liberty-s2i:21.0.0.12-java8"
-        - "--image-scripts-url"
-        - "image:///usr/local/s2i"
-        - "--as-dockerfile"
-        - "/gen-source/Dockerfile.gen"
-        - "--environment-file"
-        - "/env-params/env-file"
+        - 's2i'
+        - 'build'
+        - '$(inputs.params.PATH_CONTEXT)'
+        - 'openliberty/open-liberty-s2i:19.0.0.12'
+        - '--image-scripts-url'
+        - 'image:///usr/local/s2i'
+        - '--as-dockerfile'
+        - '/gen-source/Dockerfile.gen'
+        - '--environment-file'
+        - '/env-params/env-file'
       volumeMounts:
         - name: gen-source
           mountPath: /gen-source
@@ -98,18 +98,7 @@ spec:
     - name: build
       image: quay.io/buildah/stable:v1.11.0
       workingdir: /gen-source
-      command:
-        [
-          "buildah",
-          "bud",
-          "--tls-verify=$(inputs.params.TLSVERIFY)",
-          "--layers",
-          "-f",
-          "/gen-source/Dockerfile.gen",
-          "-t",
-          "$(outputs.resources.image.url)",
-          ".",
-        ]
+      command: ['buildah', 'bud', '--tls-verify=$(inputs.params.TLSVERIFY)', '--layers', '-f', '/gen-source/Dockerfile.gen', '-t', '$(outputs.resources.image.url)', '.']
       volumeMounts:
         - name: varlibcontainers
           mountPath: /var/lib/containers
@@ -119,14 +108,7 @@ spec:
         privileged: true
     - name: push
       image: quay.io/buildah/stable:v1.11.0
-      command:
-        [
-          "buildah",
-          "push",
-          "--tls-verify=$(inputs.params.TLSVERIFY)",
-          "$(outputs.resources.image.url)",
-          "docker://$(outputs.resources.image.url)",
-        ]
+      command: ['buildah', 'push', '--tls-verify=$(inputs.params.TLSVERIFY)', '$(outputs.resources.image.url)', 'docker://$(outputs.resources.image.url)']
       volumeMounts:
         - name: varlibcontainers
           mountPath: /var/lib/containers
