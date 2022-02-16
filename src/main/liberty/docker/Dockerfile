@@ -1,4 +1,5 @@
-FROM websphere-liberty:20.0.0.5-full-java8-ibmjava
+# FROM websphere-liberty:20.0.0.5-full-java8-ibmjava
+FROM ibmcom/websphere-traditional:latest-ubi
 
 ARG WAR_FILE
 
